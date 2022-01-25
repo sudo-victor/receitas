@@ -1,7 +1,7 @@
 export default {
   colors: {
     primary: "#F553C2",
-    complemantary: "#A82880",
+    complementary: "#A82880",
     secondary: "#2AA818",
 
     background: "#fff",
@@ -9,5 +9,12 @@ export default {
 
     input: "#F9F9F9",
     border: "rgba(0,0,0, .18)",
+  },
+
+  fonts: {
+    primary_regular: "Poppins_400Regular",
+    primary_bold: "Poppins_700Bold",
+
+    secondary_regular: "Sofia_400Regular",
   },
 };
