@@ -1,11 +1,13 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
+import { StatusBar } from "expo-status-bar";
 import { Sofia_400Regular, useFonts } from "@expo-google-fonts/sofia";
 import AppLoading from "expo-app-loading";
 import {
   Poppins_400Regular,
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
+
+import { ThemeProvider } from "./src/contexts/ThemeProvider";
 
 export default function App() {
   const [fonstLoaded] = useFonts({
@@ -19,8 +21,8 @@ export default function App() {
   }
 
   return (
-    <>
-      <StatusBar style="auto" />
-    </>
+    <ThemeProvider>
+      <StatusBar style="light" />
+    </ThemeProvider>
   );
 }
