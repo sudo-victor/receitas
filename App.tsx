@@ -8,6 +8,7 @@ import {
 } from "@expo-google-fonts/poppins";
 
 import { ThemeProvider } from "./src/contexts/ThemeProvider";
+import { Home } from "./src/screens/Home";
 
 export default function App() {
   const [fonstLoaded] = useFonts({
@@ -23,6 +24,7 @@ export default function App() {
   return (
     <ThemeProvider>
       <StatusBar style="light" />
+      <Home />
     </ThemeProvider>
   );
 }
