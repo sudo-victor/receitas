@@ -9,6 +9,7 @@ import {
 
 import { ThemeProvider } from "./src/contexts/ThemeProvider";
 import { RecipeForm } from "./src/screens/RecipeForm";
+import { StorageProvider } from "./src/contexts/StorageProvider";
 
 export default function App() {
   const [fonstLoaded] = useFonts({
@@ -23,7 +24,9 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <RecipeForm />
+      <StorageProvider>
+        <RecipeForm />
+      </StorageProvider>
     </ThemeProvider>
   );
 }

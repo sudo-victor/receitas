@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "styled-components";
 import { Feather } from "@expo/vector-icons";
-import { v4 as uuid } from "uuid";
 
 import { Header } from "../../components/Header";
 import { Field } from "../../components/Field";
 import { ItemList } from "../../components/ItemList";
 import { SubmitButton } from "../../components/SubmitButton";
 import { ModalSelect } from "../../components/ModalSelect";
+import { useStorage } from "../../hooks/storage";
 
 import {
   Container,
@@ -22,9 +22,11 @@ import {
   Separator,
   IconWrapper,
 } from "./styles";
+import { FieldSelect } from "../../components/Field/FieldSelect";
 
 export function RecipeForm() {
   const theme = useTheme();
+  const { handleAddRecipe, handleGetRecipes } = useStorage();
 
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [preparationItems, setPreparationItems] = useState<string[]>([]);
@@ -34,6 +36,7 @@ export function RecipeForm() {
   const [currentIngrendient, setCurrentIngrendient] = useState("");
   const [currentPreparationItem, setCurrentPreparationItem] = useState("");
   const [recipeType, setRecipeType] = useState("");
+  const [createdAt, setCreatedAt] = useState("");
 
   function handleAddIngredient() {
     if (currentIngrendient.trim().length === 0) return;
@@ -61,7 +64,7 @@ export function RecipeForm() {
     setPreparationItems([...listFiltered]);
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (
       name.trim().length === 0 ||
       preparationItems.length === 0 ||
@@ -76,9 +79,12 @@ export function RecipeForm() {
       preparationItems,
       ingredients,
       type: recipeType,
+      createdAt: new Date(),
     };
 
-    console.log(data);
+    await handleAddRecipe(data);
+    const items = await handleGetRecipes();
+    console.log(items);
   }
 
   function handleOpenModal() {
@@ -104,24 +110,12 @@ export function RecipeForm() {
             onChangeText={(e) => setName(e)}
           />
 
-          <SelectContainer>
-            <Label>Qual o tipo da receita?</Label>
-            <TypeWrapper>
-              <ButtonSelect onPress={handleOpenModal}>
-                <TypeTitle>
-                  {recipeType === "" ? "Selecione o tipo" : recipeType}
-                </TypeTitle>
-                <Separator />
-                <IconWrapper>
-                  <Feather
-                    name="arrow-right"
-                    size={24}
-                    color={theme.colors.secondary}
-                  />
-                </IconWrapper>
-              </ButtonSelect>
-            </TypeWrapper>
-          </SelectContainer>
+          <FieldSelect
+            title="Qual o tipo da receita?"
+            placeholder="Selecione o tipo"
+            handleOpenModal={handleOpenModal}
+            recipeType={recipeType}
+          />
 
           <Field
             title="Ingredientes"

@@ -7,8 +7,8 @@ type ContextProps = {
   handleAddRecipe: (recipe: IRecipe) => Promise<boolean>;
   handleEditRecipe: (recipe: IRecipe) => Promise<boolean>;
   handleRemoveRecipe: (id: string) => Promise<boolean>;
-  handleGetRecipe: (id: string) => Promise<boolean | Error>;
-  handleGetRecipes: (id: string) => Promise<boolean>;
+  handleGetRecipe: (id: string) => Promise<IRecipe | boolean | Error>;
+  handleGetRecipes: () => Promise<IRecipe[] | boolean>;
 };
 
 type Props = {
@@ -22,10 +22,10 @@ export function StorageProvider({ children }: Props) {
 
   async function handleAddRecipe(recipe: IRecipe): Promise<boolean> {
     try {
-      const itemsList = JSON.parse(await getItem());
+      const itemsList = JSON.parse(await getItem()) || [];
       itemsList.push(recipe);
 
-      await setItem(JSON.stringify(itemsList));
+      await setItem(JSON.stringify([itemsList]));
       return true;
     } catch {
       return false;
@@ -61,7 +61,9 @@ export function StorageProvider({ children }: Props) {
     }
   }
 
-  async function handleGetRecipe(id: string): Promise<boolean | Error> {
+  async function handleGetRecipe(
+    id: string
+  ): Promise<IRecipe | Error | boolean> {
     try {
       let itemsList = JSON.parse(await getItem());
       const recipe = itemsList.find((item) => item.id === id);
@@ -76,7 +78,7 @@ export function StorageProvider({ children }: Props) {
     }
   }
 
-  async function handleGetRecipes(id: string): Promise<boolean> {
+  async function handleGetRecipes(): Promise<IRecipe[] | boolean> {
     try {
       let itemsList = JSON.parse(await getItem());
 
