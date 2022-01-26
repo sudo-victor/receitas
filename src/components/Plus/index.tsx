@@ -3,13 +3,19 @@ import { useTheme } from "styled-components/native";
 import { Feather as Icon } from "@expo/vector-icons";
 
 import { Container } from "./styles";
+import { useNavigation } from "@react-navigation/native";
 
 export function Plus() {
-  const theme = useTheme();
+  const { colors } = useTheme();
+  const { navigate } = useNavigation();
+
+  function handleGoForm() {
+    navigate("RecipeForm");
+  }
 
   return (
-    <Container>
-      <Icon name="plus" size={32} color={theme.colors.complementary} />
+    <Container onPress={handleGoForm}>
+      <Icon name="plus" size={32} color={colors.complementary} />
     </Container>
   );
 }

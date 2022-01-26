@@ -1,5 +1,4 @@
 import React from "react";
-import { StatusBar } from "expo-status-bar";
 import { Sofia_400Regular, useFonts } from "@expo-google-fonts/sofia";
 import AppLoading from "expo-app-loading";
 import {
@@ -8,8 +7,8 @@ import {
 } from "@expo-google-fonts/poppins";
 
 import { ThemeProvider } from "./src/contexts/ThemeProvider";
-import { RecipeForm } from "./src/screens/RecipeForm";
 import { StorageProvider } from "./src/contexts/StorageProvider";
+import { Routes } from "./src/routes";
 
 export default function App() {
   const [fonstLoaded] = useFonts({
@@ -25,7 +24,7 @@ export default function App() {
   return (
     <ThemeProvider>
       <StorageProvider>
-        <RecipeForm />
+        <Routes />
       </StorageProvider>
     </ThemeProvider>
   );

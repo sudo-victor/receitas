@@ -99,7 +99,7 @@ export function RecipeForm() {
   return (
     <Container>
       <StatusBar style="light" />
-      <Header title="Adicionar Receita" />
+      <Header title="Adicionar Receita" hasGoBack />
 
       <Form>
         <Wrapper>
