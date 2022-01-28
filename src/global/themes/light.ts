@@ -7,7 +7,7 @@ export default {
     background: "#fff",
     foreground: "#777777",
 
-    input: "#F9F9F9",
+    input: "#fff",
     border: "rgba(0,0,0, .18)",
   },
 

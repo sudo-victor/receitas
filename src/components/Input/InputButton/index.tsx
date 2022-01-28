@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { useTheme } from "styled-components";
 import { Feather as Icon } from "@expo/vector-icons";
 import { TextInputProps } from "react-native";
@@ -7,9 +7,14 @@ import { Container, Input, Separator, Button } from "./styles";
 
 type Props = TextInputProps & {
   onActionPress: () => void;
+  iconName?: "check" | "search";
 };
 
-export function InputButton({ onActionPress, ...rest }: Props) {
+export function InputButton({
+  onActionPress,
+  iconName = "check",
+  ...rest
+}: Props) {
   const theme = useTheme();
 
   return (
@@ -17,7 +22,7 @@ export function InputButton({ onActionPress, ...rest }: Props) {
       <Input {...rest} onSubmitEditing={onActionPress} />
       <Separator />
       <Button onPress={onActionPress}>
-        <Icon name="check" size={20} color={theme.colors.secondary} />
+        <Icon name={iconName} size={20} color={theme.colors.secondary} />
       </Button>
     </Container>
   );

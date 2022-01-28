@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { useTheme } from "styled-components";
-import { Feather } from "@expo/vector-icons";
 
 import { Header } from "../../components/Header";
 import { Field } from "../../components/Field";
@@ -9,24 +8,13 @@ import { ItemList } from "../../components/ItemList";
 import { SubmitButton } from "../../components/SubmitButton";
 import { ModalSelect } from "../../components/ModalSelect";
 import { useStorage } from "../../hooks/storage";
-
-import {
-  Container,
-  Form,
-  Wrapper,
-  SelectContainer,
-  Label,
-  TypeWrapper,
-  ButtonSelect,
-  TypeTitle,
-  Separator,
-  IconWrapper,
-} from "./styles";
 import { FieldSelect } from "../../components/Field/FieldSelect";
 
-export function RecipeForm() {
-  const theme = useTheme();
-  const { handleAddRecipe, handleGetRecipes } = useStorage();
+import { Container, Form, Wrapper } from "./styles";
+
+export function RecipeForm({ route }) {
+  const { navigate } = useNavigation();
+  const { handleAddRecipe, handleEditRecipe } = useStorage();
 
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [preparationItems, setPreparationItems] = useState<string[]>([]);
@@ -37,11 +25,12 @@ export function RecipeForm() {
   const [currentPreparationItem, setCurrentPreparationItem] = useState("");
   const [recipeType, setRecipeType] = useState("");
   const [createdAt, setCreatedAt] = useState("");
+  const [currentId, setCurrentId] = useState("");
 
   function handleAddIngredient() {
     if (currentIngrendient.trim().length === 0) return;
 
-    setIngredients([...ingredients, currentIngrendient]);
+    setIngredients([...ingredients, currentIngrendient.trim()]);
     setCurrentIngrendient("");
   }
 
@@ -51,10 +40,16 @@ export function RecipeForm() {
     setIngredients([...listFiltered]);
   }
 
+  function handleUpdateIngredient(index: number) {
+    const listFiltered = ingredients.filter((_, idx) => idx !== index);
+
+    setIngredients([...listFiltered]);
+  }
+
   function handleAddPreparationItem() {
     if (currentPreparationItem.trim().length === 0) return;
 
-    setPreparationItems([...preparationItems, currentPreparationItem]);
+    setPreparationItems([...preparationItems, currentPreparationItem.trim()]);
     setCurrentPreparationItem("");
   }
 
@@ -73,18 +68,19 @@ export function RecipeForm() {
     )
       return;
 
+    const isToUpdate = currentId !== "" ? true : false;
+
     const data = {
-      id: Math.random().toString(36),
-      name,
+      id: isToUpdate ? currentId : Math.random().toString(36),
+      name: name.trim(),
       preparationItems,
       ingredients,
       type: recipeType,
-      createdAt: new Date(),
+      createdAt: isToUpdate ? createdAt : new Date(),
     };
 
-    await handleAddRecipe(data);
-    const items = await handleGetRecipes();
-    console.log(items);
+    isToUpdate ? await handleEditRecipe(data) : await handleAddRecipe(data);
+    navigate("Home");
   }
 
   function handleOpenModal() {
@@ -96,10 +92,31 @@ export function RecipeForm() {
     setModalVisible(false);
   }
 
+  function loadRecipeByRoute() {
+    const data = route.params;
+    if (!data) return;
+
+    const { recipe } = data;
+
+    setCurrentId(recipe.id);
+    setCreatedAt(recipe.createdAt);
+    setPreparationItems(recipe.preparationItems);
+    setIngredients(recipe.ingredients);
+    setName(recipe.name);
+    setRecipeType(recipe.type);
+  }
+
+  useEffect(() => {
+    loadRecipeByRoute();
+  }, []);
+
   return (
     <Container>
       <StatusBar style="light" />
-      <Header title="Adicionar Receita" hasGoBack />
+      <Header
+        title={currentId !== "" ? "Editar Receita" : "Adicionar Receita"}
+        hasGoBack
+      />
 
       <Form>
         <Wrapper>
@@ -131,6 +148,7 @@ export function RecipeForm() {
               key={String(idx)}
               title={item}
               onRemove={() => handleRemoveIngredient(idx)}
+              onUpdate={() => handleUpdateIngredient(idx)}
             />
           ))}
 
@@ -148,11 +166,15 @@ export function RecipeForm() {
               key={String(idx)}
               title={item}
               onRemove={() => handleRemovePreparationItem(idx)}
+              onUpdate={() => handleUpdateIngredient(idx)}
             />
           ))}
         </Wrapper>
 
-        <SubmitButton title="Criar" onPress={handleSubmit} />
+        <SubmitButton
+          title={currentId !== "" ? "Editar" : "Criar"}
+          onPress={handleSubmit}
+        />
       </Form>
 
       <ModalSelect

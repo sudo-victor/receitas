@@ -1,7 +1,9 @@
 import { RFValue } from "react-native-responsive-fontsize";
 import styled from "styled-components/native";
 
-export const Container = styled.View`
+export const Container = styled.TouchableOpacity.attrs({
+  activityOpacity: 0.9,
+})`
   width: 100%;
   padding: 20px 0;
 
@@ -12,7 +14,7 @@ export const Container = styled.View`
 
 export const Title = styled.Text`
   font-family: ${({ theme }) => theme.fonts.primary_regular};
-  font-size: ${RFValue(16)}px;
+  font-size: ${RFValue(15)}px;
   color: ${({ theme }) => theme.colors.foreground};
 `;
 
@@ -23,4 +25,9 @@ export const Actions = styled.View`
   flex-direction: row;
 `;
 
-export const Button = styled.TouchableHighlight``;
+export const Button = styled.TouchableOpacity``;
+
+export const ButtonWrapper = styled.TouchableOpacity`
+  width: 70%;
+  height: 100%;
+`;

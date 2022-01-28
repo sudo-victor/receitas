@@ -12,7 +12,7 @@ export const Form = styled.View`
 `;
 
 export const Wrapper = styled.ScrollView.attrs({
-  contentContainerStyle: { paddingBottom: 100 },
+  contentContainerStyle: { paddingBottom: 80 },
   showsVerticalScrollIndicator: false,
 })``;
 

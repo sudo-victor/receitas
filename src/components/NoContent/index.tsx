@@ -12,7 +12,7 @@ type Props = {
 export function NoContent({ title }: Props) {
   return (
     <Container>
-      <Title>{title}</Title>
+      {/* <Title>{title}</Title> */}
 
       <LottieView
         source={landing}

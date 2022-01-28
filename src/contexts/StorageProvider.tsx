@@ -1,6 +1,6 @@
 import { createContext, ReactNode } from "react";
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
-
+import A, { useAsyncStorage } from "@react-native-async-storage/async-storage";
+// A.clear();
 import { IRecipe } from "../dtos/IRecipe";
 
 type ContextProps = {
@@ -22,10 +22,12 @@ export function StorageProvider({ children }: Props) {
 
   async function handleAddRecipe(recipe: IRecipe): Promise<boolean> {
     try {
-      const itemsList = JSON.parse(await getItem()) || [];
-      itemsList.push(recipe);
+      const data = await getItem();
+      const currentData = data ? JSON.parse(data) : [];
 
-      await setItem(JSON.stringify([itemsList]));
+      const dataFormatted = [...currentData, recipe];
+
+      await setItem(JSON.stringify(dataFormatted));
       return true;
     } catch {
       return false;
