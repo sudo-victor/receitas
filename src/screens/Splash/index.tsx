@@ -1,17 +1,18 @@
 import React from "react";
-import AppLoading from "expo-app-loading";
+import { StatusBar } from "expo-status-bar";
 
-import { Container, Title } from "./styles";
-import { useTheme } from "styled-components";
+import { LoadAnimated } from "../../components/LoadAnimated";
+import { Container, Title, LoadWrapper } from "./styles";
 
 export function Splash() {
-  const { colors } = useTheme();
-
   return (
     <Container>
+      <StatusBar style="light" />
       <Title>Receitas</Title>
 
-      <AppLoading />
+      <LoadWrapper>
+        <LoadAnimated />
+      </LoadWrapper>
     </Container>
   );
 }

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useTheme } from "styled-components";
+import { StatusBar } from "expo-status-bar";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { Header } from "../../components/Header";
@@ -6,7 +8,6 @@ import { LoadAnimated } from "../../components/LoadAnimated";
 import { IRecipe } from "../../dtos/IRecipe";
 
 import { Container, Title, Item, Main, RecipeType } from "./styles";
-import { useTheme } from "styled-components";
 
 const iconName = {
   Salgado: "food-drumstick",
@@ -37,6 +38,7 @@ export function Recipe({ route }) {
 
   return (
     <Container>
+      <StatusBar style="light" />
       <Header title={isLoading ? "Carregando..." : recipe.name} hasGoBack />
       {isLoading ? (
         <LoadAnimated />
