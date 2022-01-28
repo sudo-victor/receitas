@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { FlatList } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { BackHandler, FlatList } from "react-native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useTheme } from "styled-components";
 
 import { Card } from "../../components/Card";
@@ -9,6 +9,7 @@ import { InputButton } from "../../components/Input/InputButton";
 import { IRecipe } from "../../dtos/IRecipe";
 import { NoContent } from "../../components/NoContent";
 import { Plus } from "../../components/Plus";
+import { LoadAnimated } from "../../components/LoadAnimated";
 import { useStorage } from "../../hooks/storage";
 
 import {
@@ -38,12 +39,14 @@ export function Home() {
     if (id.length === 0) return;
 
     await handleRemoveRecipe(id);
+    loadRecipes();
   }
 
   async function handleDuplicateCard(data: IRecipe) {
     data.id = Math.random().toString(36);
     data.createdAt = new Date();
     await handleAddRecipe(data);
+    loadRecipes();
   }
 
   async function handleEditCard(data: IRecipe) {
@@ -74,9 +77,23 @@ export function Home() {
     }
   }
 
+  useFocusEffect(
+    useCallback(() => {
+      loadRecipes();
+    }, [])
+  );
+
   useEffect(() => {
-    loadRecipes();
-  }, [recipes]);
+    BackHandler.addEventListener("hardwareBackPress", () => true);
+
+    const time = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => {
+      clearTimeout(time);
+    };
+  }, []);
 
   return (
     <Container>
@@ -97,12 +114,15 @@ export function Home() {
         />
       </SearchWrapper>
 
-      {filteredRecipes.length === 0 ? (
+      {isLoading && <LoadAnimated />}
+
+      {filteredRecipes.length === 0 && !isLoading ? (
         <NoContent title="Adicione uma receita" />
       ) : (
         <FlatList
           data={filteredRecipes}
           keyExtractor={(item) => String(item.id)}
+          style={{ display: isLoading ? "none" : "flex" }}
           renderItem={({ item }) => (
             <Card
               data={item}

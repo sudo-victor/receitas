@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { useTheme } from "styled-components";
 import { Feather as Icon } from "@expo/vector-icons";
 import { TextInputProps } from "react-native";

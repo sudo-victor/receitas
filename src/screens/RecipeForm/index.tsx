@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 
@@ -15,6 +15,8 @@ import { Container, Form, Wrapper } from "./styles";
 export function RecipeForm({ route }) {
   const { navigate } = useNavigation();
   const { handleAddRecipe, handleEditRecipe } = useStorage();
+  const inputIngredientEl = useRef(null);
+  const inputPreparationItemEl = useRef(null);
 
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [preparationItems, setPreparationItems] = useState<string[]>([]);
@@ -27,8 +29,25 @@ export function RecipeForm({ route }) {
   const [createdAt, setCreatedAt] = useState("");
   const [currentId, setCurrentId] = useState("");
 
+  const [currentIngredientIdEdit, setCurrentIngredientIdEdit] = useState("");
+  const [currentPreparatioItemIdEdit, setCurrentPreparatioItemIdEdit] =
+    useState("");
+
   function handleAddIngredient() {
     if (currentIngrendient.trim().length === 0) return;
+
+    if (currentIngredientIdEdit.length > 0) {
+      const listUpdated = ingredients.map((ingredient, idx) => {
+        if (idx === Number(currentIngredientIdEdit)) {
+          return currentIngrendient.trim();
+        }
+        return ingredient;
+      });
+
+      setIngredients([...listUpdated]);
+      setCurrentIngrendient("");
+      return;
+    }
 
     setIngredients([...ingredients, currentIngrendient.trim()]);
     setCurrentIngrendient("");
@@ -41,13 +60,27 @@ export function RecipeForm({ route }) {
   }
 
   function handleUpdateIngredient(index: number) {
-    const listFiltered = ingredients.filter((_, idx) => idx !== index);
+    setCurrentIngredientIdEdit(String(index));
+    const current = ingredients.find((_, idx) => idx === index);
 
-    setIngredients([...listFiltered]);
+    setCurrentIngrendient(current);
   }
 
   function handleAddPreparationItem() {
     if (currentPreparationItem.trim().length === 0) return;
+
+    if (currentPreparatioItemIdEdit.length > 0) {
+      const listUpdated = preparationItems.map((preparationItem, idx) => {
+        if (idx === Number(currentPreparatioItemIdEdit)) {
+          return currentPreparationItem.trim();
+        }
+        return preparationItem;
+      });
+
+      setPreparationItems([...listUpdated]);
+      setCurrentPreparationItem("");
+      return;
+    }
 
     setPreparationItems([...preparationItems, currentPreparationItem.trim()]);
     setCurrentPreparationItem("");
@@ -57,6 +90,13 @@ export function RecipeForm({ route }) {
     const listFiltered = preparationItems.filter((_, idx) => idx !== index);
 
     setPreparationItems([...listFiltered]);
+  }
+
+  function handleUpdatePreparationItem(index: number) {
+    setCurrentPreparatioItemIdEdit(String(index));
+    const current = preparationItems.find((_, idx) => idx === index);
+
+    setCurrentPreparationItem(current);
   }
 
   async function handleSubmit() {
@@ -166,7 +206,7 @@ export function RecipeForm({ route }) {
               key={String(idx)}
               title={item}
               onRemove={() => handleRemovePreparationItem(idx)}
-              onUpdate={() => handleUpdateIngredient(idx)}
+              onUpdate={() => handleUpdatePreparationItem(idx)}
             />
           ))}
         </Wrapper>
