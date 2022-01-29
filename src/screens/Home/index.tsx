@@ -19,6 +19,7 @@ import {
   Title,
   SearchWrapper,
 } from "./styles";
+import { Alert } from "react-native";
 
 export function Home() {
   const { colors } = useTheme();
@@ -33,6 +34,17 @@ export function Home() {
 
   function handleOpenRecipeInfo(data: IRecipe) {
     navigate("Recipe", { recipe: data });
+  }
+
+  function handleOpenDeleteAlert(id: string) {
+    Alert.alert("Alerta", "Deseja excluir esta receita?", [
+      {
+        text: "Nunca!",
+        onPress: () => {},
+        style: "cancel",
+      },
+      { text: "Sim, desejo excluir", onPress: () => handleDeleteCard(id) },
+    ]);
   }
 
   async function handleDeleteCard(id: string) {
@@ -126,7 +138,7 @@ export function Home() {
           renderItem={({ item }) => (
             <Card
               data={item}
-              onDelete={handleDeleteCard}
+              onDelete={handleOpenDeleteAlert}
               onDuplicate={handleDuplicateCard}
               onEdit={handleEditCard}
               onPress={() => handleOpenRecipeInfo(item)}

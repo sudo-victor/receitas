@@ -1,11 +1,25 @@
 {
   "expo": {
-    "name": "receita",
-    "slug": "receita",
+    "name": "Receitas",
+    "slug": "receitas",
     "version": "1.0.0",
-    "assetBundlePatterns": [
-      "**/*"
-    ]
+    "splash": {
+      "image": "./src/assets/splash.png",
+      "backgroundColor": "#F553C2"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "bundleIdentifier": "com.victorsouto.receitas",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.victorsouto.receitas",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/icon.png",
+        "backgroundColor": "#fff"
+      }
+    }
   },
   "name": "receita"
 }
